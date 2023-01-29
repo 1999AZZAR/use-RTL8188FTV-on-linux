@@ -26,6 +26,7 @@ Prerequisites
 ### Install the driver for the adapter:
     1. Enter `sudo apt-get install rtl8188fu-dkms` in Terminal and press Enter.
     2. (Optional) Enter `sudo apt purge rtl8188fu-dkms` in Terminal and press Enter.
+additionally you can Refer to the GitHub repository for more information: https://github.com/kelebek333/rtl8188fu
 ## Step 6: Change Driver Config
     1. Enter `echo “options rtl8188fu rtw_ips_mode=0” | sudo tee /etc/modprobe.d/rtl8188fu.conf` in Terminal and press Enter.
     2. Enter `sudo modprobe -rv rtl8188fu && sudo modprobe -v rtl8188fu` in Terminal and press Enter.
