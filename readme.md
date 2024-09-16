@@ -48,8 +48,14 @@ Refer to the [GitHub repository](https://github.com/kelebek333/rtl8188fu) for mo
 
 ## Step 6: Change Driver Config
 
-1. Enter `echo "options rtl8188fu rtw_ips_mode=0" | sudo tee /etc/modprobe.d/rtl8188fu.conf` in Terminal and press Enter.
+1. Enter `echo "options rtl8188fu rtw_ips_mode=0 | sudo tee /etc/modprobe.d/rtl8188fu.conf` in Terminal and press Enter.
 2. Enter `sudo modprobe -rv rtl8188fu && sudo modprobe -v rtl8188fu` in Terminal and press Enter.
+
+If MAC address of your dongle is changed after every reboot you may set it with this command:
+
+`echo "options rtl8188fu rtw_ips_mode=0 rtw_initmac="xx:xx:xx:xx:xx:xx" | sudo tee /etc/modprobe.d/rtl8188fu.conf`
+
+Change "xx:xx:xx:xx:xx:xx" with needed MAC and press Enter.
 
 ## Step 7: Reboot PC
 
