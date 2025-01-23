@@ -1,86 +1,157 @@
 # Realtek RTL8188FTV WiFi Adapter on Linux
 
-This step-by-step guide is designed for beginners who want to use the Realtek RTL8188FTV WiFi adapter on Linux. The instructions were tested on Ubuntu 22.04.1 LTS x86_64 with Linux 5.15.0-58-generic. If you're using a different distro or version, some steps may vary. Feel free to ask any questions if needed.
+This step-by-step guide is designed to help you set up the Realtek RTL8188FTV WiFi adapter on Linux. The instructions were tested on **Ubuntu 22.04.1 LTS (x86_64)** with **Linux kernel 5.15.0-58-generic**. If you're using a different distribution or version, some steps may vary. Feel free to ask questions if you encounter any issues.
 
-### Prerequisites:
+---
 
-- Plug in the Realtek RTL8188FTV WiFi adapter into one of the USB ports of your Linux PC.
-- Boot up your Linux PC.
+## Prerequisites
+
+1. **Plug in the Realtek RTL8188FTV WiFi adapter** into a USB port on your Linux PC.
+2. **Boot up your Linux PC**.
+
+---
 
 ## Step 1: Open Terminal
 
-1. Click the Grid button (9 dots) to open the Application drawer.
-2. Find and click "Terminal" to open it.
-3. A Terminal window with a black background and white text will appear, similar to the Windows Command Prompt.
+1. Click the **Grid button** (9 dots) to open the Application drawer.
+2. Search for and open the **Terminal** application.
+   - The Terminal window will have a black background with white text, similar to the Windows Command Prompt.
 
-## Step 2: Check WiFi Adapter
+---
 
-### Check if the Realtek RTL8188FTV WiFi adapter is detected by the OS:
+## Step 2: Check if the WiFi Adapter is Detected
 
-1. In Terminal, enter `ip a` and press Enter.
-2. Look for a network interface with a prefix "wlx".
-3. Alternatively, enter `lsusb` in Terminal and press Enter.
-4. Look for "Realtek Semiconductor Corp. RTL8188FTV 802.11b/g/n 1T1R 2.4G WLAN Adapter".
+Verify that the Realtek RTL8188FTV WiFi adapter is recognized by your system.
 
-## Step 3: Update Linux Packages
+### Option 1: Check Network Interfaces
+1. Run the following command in the Terminal:
+   ```bash
+   ip a
+   ```
+2. Look for a network interface with a prefix like `wlx` (e.g., `wlx1234567890ab`).
 
-### Update your Ubuntu to the latest packages:
+### Option 2: Check USB Devices
+1. Run the following command in the Terminal:
+   ```bash
+   lsusb
+   ```
+2. Look for an entry similar to:
+   ```
+   Realtek Semiconductor Corp. RTL8188FTV 802.11b/g/n 1T1R 2.4G WLAN Adapter
+   ```
 
-1. Enter `sudo apt update` in Terminal and press Enter.
-2. Enter `sudo apt upgrade` in Terminal and press Enter.
-3. Enter `sudo apt install net-tools` in Terminal and press Enter.
+---
 
-## Step 4: Add Kelebek Repository
+## Step 3: Update System Packages
 
-### Kelebek is the contributor who wrote the driver for the adapter. You can find more details [here](https://launchpad.net/~kelebek333/+archive/ubuntu/kablosuz):
+Ensure your system is up to date before proceeding.
 
-1. Enter `sudo add-apt-repository ppa:kelebek333/kablosuz` in Terminal and press Enter.
-2. Enter `sudo apt-get update` in Terminal and press Enter.
+1. Update the package list:
+   ```bash
+   sudo apt update
+   ```
+2. Upgrade installed packages:
+   ```bash
+   sudo apt upgrade
+   ```
+3. Install the `net-tools` package (optional but useful for network troubleshooting):
+   ```bash
+   sudo apt install net-tools
+   ```
 
-## Step 5: Install WiFi Adapter
+---
 
-### Install the driver for the adapter:
+## Step 4: Add the Kelebek Repository
 
-1. Enter `sudo apt-get install rtl8188fu-dkms` in Terminal and press Enter.
-2. (Optional) To remove the driver, enter `sudo apt purge rtl8188fu-dkms` in Terminal and press Enter.
+The Kelebek repository contains the driver for the Realtek RTL8188FTV adapter. Add it to your system:
 
-Refer to the [GitHub repository](https://github.com/kelebek333/rtl8188fu) for more information.
+1. Add the repository:
+   ```bash
+   sudo add-apt-repository ppa:kelebek333/kablosuz
+   ```
+2. Update the package list again:
+   ```bash
+   sudo apt-get update
+   ```
 
-## Step 6: Change Driver Config
+---
 
-1. Enter `echo "options rtl8188fu rtw_ips_mode=0 | sudo tee /etc/modprobe.d/rtl8188fu.conf` in Terminal and press Enter.
-2. Enter `sudo modprobe -rv rtl8188fu && sudo modprobe -v rtl8188fu` in Terminal and press Enter.
+## Step 5: Install the WiFi Adapter Driver
 
-If MAC address of your dongle is changed after every reboot you may set it with this command:
+Install the driver for the Realtek RTL8188FTV adapter:
 
-`echo "options rtl8188fu rtw_ips_mode=0 rtw_initmac="xx:xx:xx:xx:xx:xx" | sudo tee /etc/modprobe.d/rtl8188fu.conf`
+1. Install the driver:
+   ```bash
+   sudo apt-get install rtl8188fu-dkms
+   ```
+2. (Optional) To remove the driver later, use:
+   ```bash
+   sudo apt purge rtl8188fu-dkms
+   ```
 
-Change "xx:xx:xx:xx:xx:xx" with needed MAC and press Enter.
+For more details, visit the [GitHub repository](https://github.com/kelebek333/rtl8188fu).
 
-## Step 7: Reboot PC
+---
 
-### Restart your Linux PC to complete the setup:
+## Step 6: Configure the Driver
 
-1. Click the Power menu (top right of the screen).
-2. Choose Restart.
+Adjust the driver configuration to ensure proper functionality:
+
+1. Disable IPS mode (optional but recommended):
+   ```bash
+   echo "options rtl8188fu rtw_ips_mode=0" | sudo tee /etc/modprobe.d/rtl8188fu.conf
+   ```
+2. Reload the driver:
+   ```bash
+   sudo modprobe -rv rtl8188fu && sudo modprobe -v rtl8188fu
+   ```
+
+### Fix MAC Address Changes (Optional)
+If the MAC address of your adapter changes after every reboot, you can set a static MAC address:
+
+1. Replace `xx:xx:xx:xx:xx:xx` with your desired MAC address and run:
+   ```bash
+   echo "options rtl8188fu rtw_ips_mode=0 rtw_initmac=xx:xx:xx:xx:xx:xx" | sudo tee /etc/modprobe.d/rtl8188fu.conf
+   ```
+
+---
+
+## Step 7: Reboot Your PC
+
+Restart your system to apply the changes:
+
+1. Click the **Power menu** (top-right corner of the screen).
+2. Select **Restart**.
+
+---
 
 ## Step 8: Connect to Wi-Fi
 
-### Connect to a Wi-Fi network:
+Connect to your Wi-Fi network:
 
-1. Click Grid button > Settings > Wi-Fi.
-2. Turn ON Wi-Fi if it's off.
-3. Select the network and enter the password.
+1. Open **Settings** from the Application drawer.
+2. Go to **Wi-Fi** and turn it on if it’s off.
+3. Select your network and enter the password.
 
-That's it! You should now be able to use the Realtek RTL8188FTV WiFi adapter on your Linux PC.
+---
 
-### How to Remove the Driver and PPA
+## How to Remove the Driver and PPA
 
-If you want to remove the driver and the PPA, follow these steps:
+If you no longer need the driver or the Kelebek repository, follow these steps:
 
-1. Open Terminal.
-2. Enter `sudo apt purge rtl8188fu-dkms` in Terminal and press Enter.
-3. Enter `sudo add-apt-repository --remove ppa:kelebek333/kablosuz` in Terminal and press Enter.
-4. Reboot your PC to complete the removal.
+1. Remove the driver:
+   ```bash
+   sudo apt purge rtl8188fu-dkms
+   ```
+2. Remove the Kelebek repository:
+   ```bash
+   sudo add-apt-repository --remove ppa:kelebek333/kablosuz
+   ```
+3. Reboot your PC to complete the removal:
+   ```bash
+   sudo reboot
+   ```
 
-That's it! You should now be able to use the Realtek RTL8188FTV WiFi adapter on your Linux PC.
+---
+
+That’s it! Your Realtek RTL8188FTV WiFi adapter should now be fully functional on your Linux PC. If you encounter any issues, refer to the [GitHub repository](https://github.com/kelebek333/rtl8188fu) or seek help from the Linux community.
