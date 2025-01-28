@@ -93,32 +93,45 @@ For more details, visit the [GitHub repository](https://github.com/kelebek333/rt
 
 ---
 
-## Step 6: Configure the Driver
+# Step 6: Configure the Driver
 
 Adjust the driver configuration to ensure proper functionality:
 
-1. Disable IPS mode (optional but recommended):
+#### 1. Disable IPS Mode (Optional but Recommended)
+IPS (Inactive Power Save) mode can sometimes cause connectivity issues. Disabling it is recommended for better performance:
+
+1. Create or update the driver configuration file:
    ```bash
    echo "options rtl8188fu rtw_ips_mode=0" | sudo tee /etc/modprobe.d/rtl8188fu.conf
    ```
-2. Reload the driver:
+   - This command writes `options rtl8188fu rtw_ips_mode=0` to the file `/etc/modprobe.d/rtl8188fu.conf`.
+   - If the file already exists, it will be overwritten. To append instead, use `tee -a`.
+
+2. Reload the driver to apply the changes:
    ```bash
    sudo modprobe -rv rtl8188fu && sudo modprobe -v rtl8188fu
    ```
+   - This unloads (`-r`) and reloads (`-v`) the `rtl8188fu` module with the new configuration.
 
-### Fix MAC Address Changes (Optional)
+#### 2. Fix MAC Address Changes (Optional)
 If the MAC address of your adapter changes after every reboot, you can set a static MAC address:
 
 1. Replace `xx:xx:xx:xx:xx:xx` with your desired MAC address and run:
    ```bash
    echo "options rtl8188fu rtw_ips_mode=0 rtw_initmac=xx:xx:xx:xx:xx:xx" | sudo tee /etc/modprobe.d/rtl8188fu.conf
    ```
+   - This sets both `rtw_ips_mode=0` and a static MAC address (`rtw_initmac=xx:xx:xx:xx:xx:xx`).
+
+2. Reload the driver to apply the changes:
+   ```bash
+   sudo modprobe -rv rtl8188fu && sudo modprobe -v rtl8188fu
+   ```
 
 ---
 
 ## Step 7: Reboot Your PC
 
-Restart your system to apply the changes:
+Restart your system to ensure all changes are applied:
 
 1. Click the **Power menu** (top-right corner of the screen).
 2. Select **Restart**.
